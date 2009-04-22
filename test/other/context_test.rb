@@ -1,5 +1,11 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
+module ShouldTestMacros
+  def should_create_a_pending_test_in_the_appropriate_context
+    should "create a pending test in the appropriate context"
+  end
+end
+
 class ContextTest < Test::Unit::TestCase # :nodoc:
   
   def self.context_macro(&blk)
@@ -142,4 +148,14 @@ class ContextTest < Test::Unit::TestCase # :nodoc:
       should_eventually "only print this statement once for a should_eventually"
     end
   end
+  
+  extend ShouldTestMacros
+  context "when calling tests loaded from a module" do
+    begin
+      should_create_a_pending_test_in_the_appropriate_context
+    rescue NameError => e
+      fail "Shoulda should not raise an exception due to a typo"
+    end
+  end
+  
 end
